@@ -1,1 +1,1 @@
-include wsock_secrets_provider/*.pem
+include verifiably_checker/*.pem

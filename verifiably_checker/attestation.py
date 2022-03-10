@@ -34,28 +34,13 @@ def encrypt(attestation_doc, plaintext):
     return base64.b64encode(ciphertext).decode()
 
 
-def get_credentials(attestation_doc_b64):
-
-    attestation_doc = base64.b64decode(attestation_doc_b64)
-    att_doc_status = verify_attestation_doc(attestation_doc)
-    if att_doc_status == False:
-        return False
-
-    account_id = "0000"
-    mercury_token = "1234"
-    encrypted_id = encrypt(attestation_doc, account_id)
-    encrypted_token = encrypt(attestation_doc, mercury_token)
-
-    credential_bundle = {
-        "account_id": account_id,
-        "mercury_token": mercury_token
-    }
-
-    credential_bundle_str = json.dumps(credential_bundle)
-
-    encrypted_bundle = encrypt(attestation_doc, credential_bundle_str)
-
-    return encrypted_bundle;
+def get_user_data(attestation_doc):
+    # Decode CBOR attestation document
+    data = cbor2.loads(attestation_doc)
+    # Load and decode document payload
+    doc = data[2]
+    doc_obj = cbor2.loads(doc)
+    return doc_obj['user_data']
 
 
 def verify_attestation_doc(attestation_doc, expected_pcrs):
@@ -133,7 +118,7 @@ def validate_signature(data, doc, doc_obj):
 
 def validate_pki(doc_obj):
     bin_file = None
-    with resources.open_binary('wsock_secrets_provider', 'root.pem') as fp:
+    with resources.open_binary('verifiably_checker', 'root.pem') as fp:
         bin_file = fp.read()
 
     root_cert_pem = bin_file.decode('utf-8')

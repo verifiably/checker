@@ -31,7 +31,7 @@ setup(
     python_requires='>=3.8',
     include_package_data = True,
     keywords=['python', 'security', 'verification', 'attestation'],
-    url='https://github.com/verifiably/wsock-secrets-provider',
+    url='https://github.com/verifiably/checker',
     classifiers=[
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
