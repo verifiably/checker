@@ -44,6 +44,11 @@ def get_user_data(attestation_doc):
 
 
 def verify_attestation_doc(attestation_doc, expected_pcrs):
+    # Check if attestation doc is in b64 as str
+    if isinstance(attestation_doc, str):
+        # Convert the b64 str to bytes
+        attestation_doc = base64.b64decode(vfunctions_results)
+
     # Decode CBOR attestation document
     data = cbor2.loads(attestation_doc)
     # Load and decode document payload
