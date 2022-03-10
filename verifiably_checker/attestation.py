@@ -16,6 +16,9 @@ import io
 
 
 def encrypt(attestation_doc, plaintext):
+    # Convert the b64 str to bytes
+    attestation_doc = base64.b64decode(attestation_doc)
+
     # Decode CBOR attestation document
     data = cbor2.loads(attestation_doc)
 
@@ -35,19 +38,23 @@ def encrypt(attestation_doc, plaintext):
 
 
 def get_user_data(attestation_doc):
+    # Convert the b64 str to bytes
+    attestation_doc = base64.b64decode(attestation_doc)
     # Decode CBOR attestation document
     data = cbor2.loads(attestation_doc)
     # Load and decode document payload
     doc = data[2]
     doc_obj = cbor2.loads(doc)
-    return doc_obj['user_data']
+
+    user_data = json.loads(doc_obj['user_data'])
+
+    return user_data
 
 
 def verify_attestation_doc(attestation_doc, expected_pcrs):
-    # Check if attestation doc is in b64 as str
-    if isinstance(attestation_doc, str):
-        # Convert the b64 str to bytes
-        attestation_doc = base64.b64decode(vfunctions_results)
+
+    # Convert the b64 str to bytes
+    attestation_doc = base64.b64decode(attestation_doc)
 
     # Decode CBOR attestation document
     data = cbor2.loads(attestation_doc)
