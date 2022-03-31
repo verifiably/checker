@@ -74,9 +74,15 @@ def verify_attestation_doc(attestation_doc, expected_pcrs):
 
     return True;
 
-def verify_pcrs(doc_obj, expected_pcrs ):
+def verify_pcrs(doc_obj, pcrs_dict):
     # Get PCRs from attestation document
     document_pcrs_arr = doc_obj['pcrs']
+
+    doc_pcr0 = document_pcrs_arr[0].hex()
+
+    if doc_pcr0 not in pcrs_dict: return False
+
+    expected_pcrs = pcrs_dict[doc_pcr0]
 
     for pcr_key in expected_pcrs.keys():
         index = int(pcr_key)
@@ -88,7 +94,7 @@ def verify_pcrs(doc_obj, expected_pcrs ):
 
         pcr = expected_pcrs[pcr_key]
         doc_pcr = document_pcrs_arr[index].hex()
-        
+
         # Check if PCR match
         if pcr != doc_pcr:
             print("Wrong pcr {}".format(index))
